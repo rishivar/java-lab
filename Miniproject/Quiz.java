@@ -3,6 +3,7 @@ package quiz;
 
 import java.util.*;
 
+
 abstract class Detail
 {
     String username;
@@ -72,17 +73,21 @@ class Contestant extends Master
 {
     private double points[];
     private int pno;            //Keeps track of no of Quiz Attempts
+    private String feedback;
+    
     Contestant()
     {
         super("Null","nopass",0);
         points=new double[100];
         pno=-1;
+        feedback = "No Feedback yet!";
     }
     Contestant(String username,String password,int age)
     {
         super(username,password,age);
         this.points = new double[100];
         pno=-1;
+        feedback = "No Feedback yet!";
     }
     Contestant(String username,String password,int age,Master m)
     {
@@ -90,6 +95,7 @@ class Contestant extends Master
         this.points = new double[100];
         set_values(m);
         pno=-1;
+        feedback = "No Feedback yet!";
     }
     void set_values(Master m)
     {
@@ -117,7 +123,14 @@ class Contestant extends Master
             System.out.println(points[i]);
         }
     }
-    
+    void set_feedback(String feedback)
+    {
+        this.feedback = feedback;
+    }
+    String get_feedback()
+    {
+        return feedback;
+    }
 }
 
 class UserNotFoundException extends Exception
@@ -129,7 +142,7 @@ class UserNotFoundException extends Exception
     }
     public String toString()
     {
-        return detail;
+        return "User: "+detail+" Not Found!";
     }
 }
 
@@ -139,37 +152,27 @@ class UserNotFoundException extends Exception
 
 
 public class Quiz {
-
-    
-    
-    public static void main(String[] args) throws UserNotFoundException{
-        Master admin;
-        Contestant user[] = new Contestant[100];
-        int ch=0;                               //Main menu choice Variable
-        int choice=0;                           //Admin&User menu choice Variable
-        int cn=-1;                              //No of users(Contestant)
-        Scanner in=new Scanner(System.in);
-        admin=new Master("user","pass",19);
-        while(ch!=3)
+        static Contestant user[] = new Contestant[100];
+        static int ch=0;                               //Main menu choice Variable
+        static int choice=0;                           //Admin&User menu choice Variable
+        static int cn=-1;                              //No of users(Contestant)
+        static Scanner in=new Scanner(System.in);
+        static Master admin = new Master("admin","123",20);
+        static String name;
+        static int age;
+        static String pass;
+    private static void admin(Master admin)
+    {
+        while(1!=0)
         {
-            System.out.println("\n\tMenu");
-            System.out.println("1.Admin");
-            System.out.println("2.User");
-            System.out.println("3.Exit");
-            System.out.print("Enter Choice : ");
-            ch=in.nextInt();
-            if(ch==1)
-            {
-                choice=0;
-                while(choice!=4)
-                {   
-                    Administrator:
                     System.out.println("Welcome Administrator!");
                     System.out.println("\n\tMenu");
                     System.out.println("1.Add New Question");
                     System.out.println("2.Add Multiple Questions");
                     System.out.println("3.View Questions");
-                    System.out.println("4.Return to Main Menu");
+                    System.out.println("4.View LeaderBoard");
+                    System.out.println("5.Give Feedback");
+                    System.out.println("6.Return to Main Menu");
                     System.out.print("Enter Choice : ");
                     choice=in.nextInt();
                     in.nextLine();
@@ -203,16 +206,21 @@ public class Quiz {
                             System.out.println("Enter Options : ");
                             for(int i=0;i<4;i++)
                             {
-                                switch(i)
+                                if(i == 0) 
                                 {
-                                    case 0: System.out.println("Enter Option a: ");
-                                            break;
-                                    case 1: System.out.println("Enter Option b: ");
-                                            break;
-                                    case 2: System.out.println("Enter Option c: ");
-                                            break;
-                                    case 3: System.out.println("Enter Option d: ");
-                                            break;
+                                    System.out.println("Enter Option a: ");
+                                }
+                                if(i == 1)
+                                {
+                                    System.out.println("Enter Option b: ");
+                                }
+                                if(i == 2)    
+                                {
+                                    System.out.println("Enter Option c: ");
+                                }
+                                if(i == 3)
+                                {
+                                    System.out.println("Enter Option d: ");
                                 }
                                 ans[i]=in.nextLine();
                             }
@@ -232,73 +240,163 @@ public class Quiz {
                     }
                     else if(choice==4)
                     {
-                        //else  if Not needed 
-                        break;
+                        leaderboard();
                     }
-                }
-            }
-            else if(ch==2)
-            {
-                choice=0;
-                String name;
-                int age;
-                String pass;
-
-                while(choice!=3)
-                {                    
-                    System.out.println("\n\tMenu");
-                    System.out.println("1.New User");
-                    System.out.println("2.Login User");
-                    System.out.println("3.Return to Main Menu");
-                    System.out.print("Enter Choice : ");
-                    choice=in.nextInt();
-                    in.nextLine();
-                    if(choice==1)
+                    else if(choice==5)
                     {
-                        cn=cn+1;
-                        System.out.println("Enter Name(Username) : ");
-                        name=in.nextLine();
-                        System.out.println("Enter Password : ");
-                        pass=in.nextLine();
-                        System.out.println("Enter Age: ");
-                        age = in.nextInt();
-                        user[cn]=new Contestant(name,pass,age,admin); //Add Input functions HERE
-                    }
-                    else if(choice==2)
-                    {
-                        int uindex = -1;
-                        int uchoice=0;
-                        System.out.println("Enter Username: ");
+                        for(int i=0;i<=cn;i++)
+                        {
+                            System.out.println(" Username :"+ user[i].username);
+                        }
+                        System.out.println("Enter name of user to give feedback about!");
                         name = in.nextLine();
+                        for(int i=0;i<=cn;i++)
+                        {
+                           if(name.equals(user[i].username))
+                           {
+                               System.out.println("Enter Feedback: ");
+                               String feedback = in.nextLine();
+                               user[i].set_feedback(feedback);
+                           }
+                        }
+                    }
+                    else if(choice==6)
+                    {
+                        menu();
+                    }
+        }          
+    }
+    
+    public static void menu()
+    {
+        
+        
+            int pos;
+            System.out.println("\n\tMenu");
+            System.out.println("1.New User");
+            System.out.println("2.Login User");
+            System.out.print("Enter Choice : ");
+            choice=in.nextInt();
+            in.nextLine();
+            if(choice==1)
+            {
+                 create_new_user();  
+                 menu();
+            }                
+            if(choice==2)
+            {
+                login();
+            }
+            
+                    
+    }
+
+    
+    public static void create_new_user()
+    {
+        cn=cn+1;
+        System.out.println("Enter Name(Username) : ");
+        name=in.nextLine();
+        System.out.println("Enter Password : ");
+        pass=in.nextLine();
+        System.out.println("Enter Age: ");
+        age = in.nextInt();
+        user[cn]=new Contestant(name,pass,age,admin);
+    }
+    
+    public static void admin_login()
+    {
+        System.out.println("Enter Username: ");
+        name = in.next();
+        System.out.println("Enter Password: ");
+        pass = in.next();
+        if(name.equals("admin"))
+        {
+            admin(admin);
+        }
+        else
+            menu();
+    }
+    
+    public static void login()
+    {
+        int pos = -1,c ;
+        System.out.println("1.Login as Admin");
+        System.out.println("2.Login as User");
+        c = in.nextInt();
+        if(c == 1)
+        {
+            admin_login();
+        }
+        else
+        {
+            try
+            {
+                pos = login_user();
+            }
+            catch(UserNotFoundException e)
+            {
+                System.out.println(e);
+            }
+            user(pos);
+        }
+    }
+    
+    public static int login_user() throws UserNotFoundException
+    {
+                     int uindex = -1;
+
+                        int f = 0;
+                        System.out.println("Enter Username: ");
+                        name = in.next();
                         System.out.println("Enter Password: ");
-                        pass = in.nextLine();
-                        
+                        pass = in.next();
+         
+                       
                         for(int i=0;i<=cn;i++)
                         {
                             if(user[i].username.equals(name) && user[i].passwd.equals(pass))
                             {
                                uindex = i;
-                            }
+                            } 
                             else
                             {
-                                //throw new UserNotFoundException(name);
-                                System.out.println("User Not Found!");
+                                throw new UserNotFoundException(name);
                             }
                                   
                         }
                         
-                        
-                        while(uchoice!=4)
-                        {
-                            System.out.println("\n\nWelcome "+user[uindex].username);
-                            System.out.println("\n\tMenu");
-                            System.out.println("1.Attempt Quiz");
-                            System.out.println("2.View LeaderBoard");
-                            System.out.println("3.View Points");
-                            System.out.println("4.Return to User Menu");
-                            System.out.println("Enter Choice : ");
-                            uchoice=in.nextInt();
-                            in.nextLine();
+                        return uindex;
+    }
+    
+    public static void leaderboard()
+    {
+        System.out.println("Quiz Chart");
+        for(int i=0;i<=cn;i++)
+        {
+            System.out.println("Name :"+user[i].username);
+            user[i].display_points();
+        }
+    }
+    
+    
+    
+    public static void user(int uindex)
+    {
+        while(1!=0)
+        {
+        int uchoice=0;
+        
+        System.out.println("\n\nWelcome "+user[uindex].username);
+        System.out.println("\n\tMenu");
+        System.out.println("1.Attempt Quiz");
+        System.out.println("2.View LeaderBoard");
+        System.out.println("3.View Points");
+        System.out.println("4.View Feedback");
+        System.out.println("5.Return to User Menu");
+        System.out.println("Enter Choice : ");
+        uchoice=in.nextInt();
+        in.nextLine();
                             if(uchoice==1)
                             {
                                 String ans;
@@ -323,12 +421,7 @@ public class Quiz {
                             }
                             else if(uchoice==2)
                             {
-                                System.out.println("Quiz Chart");
-                                for(int i=0;i<=uindex;i++)
-                                {
-                                    System.out.println("Name :"+user[i].username);
-                                    user[i].display_points();
-                                }
+                                leaderboard();
                             }
                             else if(uchoice==3)
                             {
@@ -337,20 +430,22 @@ public class Quiz {
                             }
                             else if(uchoice==4)
                             {
-                                //System.out.println("This elif is not needed");
-                                //System.out.println("Remove this if you want");
-                                break;
+                                    System.out.println("Feedback"+ user[uindex].get_feedback());
                             }
-                        }
-                    }
-                    else if(choice==3)
-                    {
-                        break;
-                    }
-                } 
-            }
-            
+                            else if(uchoice==5)
+                            {
+                                menu();
+                            }
+    
         }
     }
-   
+    
+    
+public static void main(String[] args)     
+    {
+            menu();           
+            
+    }
 }
+    
+   
