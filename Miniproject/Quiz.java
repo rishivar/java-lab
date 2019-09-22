@@ -1,8 +1,8 @@
-package quiz;
-
+//package quiz;
 
 import java.util.*;
 
+import myException.UserNotFoundException;
 
 abstract class Detail
 {
@@ -133,24 +133,6 @@ class Contestant extends Master
     }
 }
 
-class UserNotFoundException extends Exception
-{
-    String detail;
-    UserNotFoundException(String detail)
-    {
-        this.detail = detail;
-    }
-    public String toString()
-    {
-        return "User: "+detail+" Not Found!";
-    }
-}
-
-
-
-
-
-
 public class Quiz {
         static Contestant user[] = new Contestant[100];
         static int ch=0;                               //Main menu choice Variable
@@ -165,15 +147,16 @@ public class Quiz {
     {
         while(1!=0)
         {
+        			clearScreen();
                     System.out.println("Welcome Administrator!");
-                    System.out.println("\n\tMenu");
-                    System.out.println("1.Add New Question");
-                    System.out.println("2.Add Multiple Questions");
-                    System.out.println("3.View Questions");
-                    System.out.println("4.View LeaderBoard");
-                    System.out.println("5.Give Feedback");
-                    System.out.println("6.Return to Main Menu");
-                    System.out.print("Enter Choice : ");
+                    System.out.println("\n\t\t\t\tMenu");
+                    System.out.println("\t\t1.Add New Question");
+                    System.out.println("\t\t2.Add Multiple Questions");
+                    System.out.println("\t\t3.View Questions");
+                    System.out.println("\t\t4.View LeaderBoard");
+                    System.out.println("\t\t5.Give Feedback");
+                    System.out.println("\t\t6.Return to Main Menu");
+                    System.out.print("\t\tEnter Choice : ");
                     choice=in.nextInt();
                     in.nextLine();
                     if(choice==1)
@@ -185,6 +168,22 @@ public class Quiz {
                         System.out.println("Enter Options : ");
                         for(int i=0;i<4;i++)
                         {
+                        	if(i == 0) 
+                            {
+                                System.out.println("Enter Option a: ");
+                            }
+                            if(i == 1)
+                            {
+                                System.out.println("Enter Option b: ");
+                            }
+                            if(i == 2)    
+                            {
+                                System.out.println("Enter Option c: ");
+                            }
+                            if(i == 3)
+                            {
+                                System.out.println("Enter Option d: ");
+                            }
                             ans[i]=in.nextLine();
                         }
                         System.out.println("Enter Answer : ");
@@ -224,7 +223,7 @@ public class Quiz {
                                 }
                                 ans[i]=in.nextLine();
                             }
-                            System.out.println("Enter Answer Option : ");
+                            System.out.println("Enter Answer: ");
                             ans[4]=in.nextLine();
                             admin.set_Question(s1,ans);
                         }
@@ -262,20 +261,23 @@ public class Quiz {
                     }
                     else if(choice==6)
                     {
+						clearScreen() ;
                         menu();
                     }
+                    System.out.println("Press Enter to Continue ... ");
+                    in.nextLine();
+                    clearScreen();
         }          
     }
     
     public static void menu()
     {
-        
-        
+            clearScreen();
             int pos;
-            System.out.println("\n\tMenu");
-            System.out.println("1.New User");
-            System.out.println("2.Login User");
-            System.out.println("3.Exit");
+            System.out.println("\n\t\t\tMenu");
+            System.out.println("\t\t1.New User");
+            System.out.println("\t\t2.Login");
+	    	System.out.println("\t\t0.Exit");
             System.out.print("Enter Choice : ");
             choice=in.nextInt();
             in.nextLine();
@@ -288,23 +290,20 @@ public class Quiz {
             {
                 login();
             }
-            else if(choice==3)
-            {
-                System.exit(0);
-            }
-            else
-            {
-                menu();
-            }
-            
-                    
+			else if(choice ==0)
+			{
+				System.exit(0);
+			}
+			else
+			{
+				menu();
+			}       
     }
 
-    
     public static void create_new_user()
     {
         cn=cn+1;
-        System.out.println("Enter Name(Username) : ");
+        System.out.println("\nEnter Name(Username) : ");
         name=in.nextLine();
         System.out.println("Enter Password : ");
         pass=in.nextLine();
@@ -330,9 +329,10 @@ public class Quiz {
     public static void login()
     {
         int pos = -1,c ;
-        System.out.println("1.Login as Admin");
+        System.out.println("\n1.Login as Admin");
         System.out.println("2.Login as User");
-        c = in.nextInt();
+        System.out.println("Enter Choice : ");
+		c = in.nextInt();
         if(c == 1)
         {
             admin_login();
@@ -342,20 +342,20 @@ public class Quiz {
             try
             {
                 pos = login_user();
+                clearScreen();
             }
             catch(UserNotFoundException e)
             {
                 System.out.println(e);
-				menu();
+                menu();
             }
-           	user(pos);
+            user(pos);
         }
     }
     
     public static int login_user() throws UserNotFoundException
     {
                      int uindex = -1;
-
                         int flag = 0;
                         System.out.println("Enter Username: ");
                         name = in.next();
@@ -369,18 +369,19 @@ public class Quiz {
                             {
                                uindex = i;
                                flag=1;
-                            }     
+                            }  
                         }
                         if(flag==0)
                         {
                             throw new UserNotFoundException(name);
                         }
+                        
                         return uindex;
     }
     
     public static void leaderboard()
     {
-        System.out.println("Quiz Chart");
+        System.out.println("\nQuiz Chart");
         for(int i=0;i<=cn;i++)
         {
             System.out.println("Name :"+user[i].username);
@@ -396,14 +397,14 @@ public class Quiz {
         {
         int uchoice=0;
         
-        System.out.println("\n\nWelcome "+user[uindex].username);
-        System.out.println("\n\tMenu");
-        System.out.println("1.Attempt Quiz");
-        System.out.println("2.View LeaderBoard");
-        System.out.println("3.View Points");
-        System.out.println("4.View Feedback");
-        System.out.println("5.Return to User Menu");
-        System.out.println("Enter Choice : ");
+        System.out.println("\t\tWelcome "+user[uindex].username);
+        System.out.println("\n\t\t\t\tMenu");
+        System.out.println("\t\t1.Attempt Quiz");
+        System.out.println("\t\t2.View LeaderBoard");
+        System.out.println("\t\t3.View Points");
+        System.out.println("\t\t4.View Feedback");
+        System.out.println("\t\t5.Return to User Menu");
+        System.out.print("\t\tEnter Choice : ");
         uchoice=in.nextInt();
         in.nextLine();
                             if(uchoice==1)
@@ -414,7 +415,7 @@ public class Quiz {
                                 {
                                     admin.display_Question(i);
                                     System.out.println("Enter Option : ");
-                                    ans=in.next();
+                                    ans=in.nextLine();
                                     if(ans.equals(admin.get_ans(i)))
                                     {
                                         c_ans=c_ans+1;
@@ -439,21 +440,28 @@ public class Quiz {
                             }
                             else if(uchoice==4)
                             {
-                                    System.out.println("Feedback"+ user[uindex].get_feedback());
+                                    System.out.println("Feedback: \n "+ user[uindex].get_feedback());
                             }
                             else if(uchoice==5)
                             {
                                 menu();
                             }
+                            System.out.println("Press Enter to Continue ... ");
+                            in.nextLine();
+                            clearScreen();
     
         }
     }
+
+public static void clearScreen() {  
+    System.out.print("\033[H\033[2J");  
+    System.out.flush();  
+}  
     
     
 public static void main(String[] args)     
     {
-            menu();           
-            
+            menu();                  
     }
 }
     
