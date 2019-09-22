@@ -275,6 +275,7 @@ public class Quiz {
             System.out.println("\n\tMenu");
             System.out.println("1.New User");
             System.out.println("2.Login User");
+            System.out.println("3.Exit");
             System.out.print("Enter Choice : ");
             choice=in.nextInt();
             in.nextLine();
@@ -283,9 +284,17 @@ public class Quiz {
                  create_new_user();  
                  menu();
             }                
-            if(choice==2)
+            else if(choice==2)
             {
                 login();
+            }
+            else if(choice==3)
+            {
+                System.exit(0);
+            }
+            else
+            {
+                menu();
             }
             
                     
@@ -337,8 +346,9 @@ public class Quiz {
             catch(UserNotFoundException e)
             {
                 System.out.println(e);
+				menu();
             }
-            user(pos);
+           	user(pos);
         }
     }
     
@@ -346,7 +356,7 @@ public class Quiz {
     {
                      int uindex = -1;
 
-                        int f = 0;
+                        int flag = 0;
                         System.out.println("Enter Username: ");
                         name = in.next();
                         System.out.println("Enter Password: ");
@@ -358,14 +368,13 @@ public class Quiz {
                             if(user[i].username.equals(name) && user[i].passwd.equals(pass))
                             {
                                uindex = i;
-                            } 
-                            else
-                            {
-                                throw new UserNotFoundException(name);
-                            }
-                                  
+                               flag=1;
+                            }     
                         }
-                        
+                        if(flag==0)
+                        {
+                            throw new UserNotFoundException(name);
+                        }
                         return uindex;
     }
     
