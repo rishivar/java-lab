@@ -92,7 +92,7 @@ class Array
                 System.out.println("\nList After Removal: "+ alist );
                 System.out.println();
              
-                Set<String> set = new HashSet<>(alist);
+                Set<String> set = new TreeSet<>(alist);
                 alist.clear();
                 alist.addAll(set);
                 System.out.println("After Removal of Duplicates: "+ alist);
